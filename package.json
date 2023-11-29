@@ -1,5 +1,5 @@
 {
-  "name": "innovatesync",
+  "name": "test-dwpcii",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -8,7 +8,7 @@
     "devc": "NODE_ENV=development && webpack serve --config ./webpack.dev.config.js --mode development",
     "devb": "babel-watch ./server/bin/www",
     "cleans": "rm -rf dist",
-    "cleanc": "rm -f ./public/bundle.js",
+    "cleanc": "rm -f ./public/bundle.js ./public/styles/app.css",
     "b:s": "npm run cleans && babel ./server --out-dir dist --copy-files",
     "b:c": "npm run cleanc && webpack --config ./webpack.config.js --mode production",
     "build": "npm run b:c && npm run b:s"
@@ -21,7 +21,9 @@
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
     "webpack-dev-middleware": "^6.1.1",
-    "webpack-hot-middleware": "^2.25.4"
+    "webpack-hot-middleware": "^2.25.4",
+    "css-loader": "^6.7.3",
+"mini-css-extract-plugin": "^2.7.5"
   },
   "devDependencies": {
     "@babel/cli": "^7.22.15",
