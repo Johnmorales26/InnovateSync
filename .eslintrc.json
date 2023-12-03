@@ -20,6 +20,7 @@
         ]
     },
     "globals": {
-        "__rootdir": "readonly"
+        "__rootdir": "readonly",
+        "M": "readonly"
     }
 }
