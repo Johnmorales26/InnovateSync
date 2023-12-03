@@ -1,19 +1,20 @@
 #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
+// Module that allows to communicate with a client
+// usign HTTP protocol
 import http from 'http';
-import Debug from 'debug';
+// Importing the server logic
+// require is used to import code from an external file
 import app from '../app';
 
-const debug = Debug('innovatesync');
-// debug = Debug('test-dwpcii:server');--
+// Importing winston logger
+import log from '../config/winston';
 
 /**
  * Create HTTP server.
  */
 
+log.info('The server is created from the express instance');
 const server = http.createServer(app);
 
 /**
@@ -57,10 +58,12 @@ function onError(error) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
+      log.error(`${bind} requires elevated privileges`);
       console.error(`${bind} requires elevated privileges`);
       process.exit(1);
       break;
     case 'EADDRINUSE':
+      log.error(`${bind} is already in use`);
       console.error(`${bind} is already in use`);
       process.exit(1);
       break;
@@ -75,8 +78,7 @@ function onError(error) {
 
 function onListening() {
   const addr = server.address();
-  const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
-  debug(`Listening on ${bind}`);
+  log.info(`⭐⭐ Listening on ${process.env.APP_URL}:${addr.port} ⭐⭐`);
 }
 
 /**

@@ -2,18 +2,25 @@
 import webpack from 'webpack';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
 import WebpackHotMiddleware from 'webpack-hot-middleware';
+// Helps to parse client cookies
+import cookieParser from 'cookie-parser';
+// Library to log http communication
+import morgan from 'morgan';
 // Importing webpack configuration
 import webpackConfig from '../webpack.dev.config';
+// Impornting winston logger
+import log from './config/winston';
 
-// const debug = require('debug')('test-dwpcii:server');
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
-const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+// Creando variable del directorio raiz
+// eslint-disable-next-line
+global["__rootdir"] = path.resolve(process.cwd());
 
 //  Creando la instancia de express
 const app = express();
@@ -54,6 +61,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 //  Se establecen los Middlewares
+// Log all received requests
+app.use(morgan('dev', { stream: log.stream }));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -67,6 +76,7 @@ app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
+  log.info(`404 Pagina no encontrada ${req.method} ${req.originalUrl}`);
   next(createError(404));
 });
 
@@ -78,6 +88,7 @@ app.use((err, req, res) => {
 
   // render the error page
   res.status(err.status || 500);
+  log.error(`${err.status || 500} - ${err.message}`);
   res.render('error');
 });
 
