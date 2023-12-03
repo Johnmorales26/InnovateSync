@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/', (req, res) => {
   res.render('index', {
     title: 'InnovateSync',
-    author: 'Jonatan Morales, Uriel Torres',
+    authors: 'Jonatan Morales, Uriel Torres',
   });
 });
 
