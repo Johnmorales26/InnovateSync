@@ -25,6 +25,9 @@ import webpackConfig from '../webpack.dev.config';
 // Impornting winston logger
 import log from './config/winston';
 
+// Importando enrutador
+import router from './routes/router';
+
 // Creando variable del directorio raiz
 // eslint-disable-next-line
 global['__rootdir'] = path.resolve(process.cwd());
@@ -78,8 +81,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
 
 // Registering routes
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// app.use('/', indexRouter);
+// app.use('/users', usersRouter);
+router.addRoutes(app);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
