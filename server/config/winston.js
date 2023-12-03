@@ -5,7 +5,8 @@ import path from 'path';
 
 // Se desestructuran funciones para realizar la
 // composición del formato
-const { combine, timestamp, label, printf, colorize } = format;
+// eslint-disable-next-line object-curly-newline
+const { combine, timestamp, label, printf, colorize, prettyPrint } = format;
 
 // Creando variable del directorio raiz
 // eslint-disable-next-line
@@ -36,7 +37,9 @@ const myConsoleFormat = combine(
   timestamp({ format: 'DD-MM-YYYY HH:mm:ss' }),
   // Función de impreson
   printf(
-    (info) => `${info.level}: ${info.label}: ${info.timestamp}: ${info.message}`,
+    (info) =>
+      // eslint-disable-next-line implicit-arrow-linebreak
+      `${info.level}: ${info.label}: ${info.timestamp}: ${info.message}`,
   ),
 );
 
@@ -47,7 +50,7 @@ const myFileFormat = combine(
   // Agregando fecha
   timestamp({ format: 'DD-MM-YYYY HH:mm:ss' }),
   // Estableciendo la salida en formato Json
-  format.json(),
+  prettyPrint(),
 );
 
 // Creando el objeto de opciones para cada transporte

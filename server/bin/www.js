@@ -10,6 +10,12 @@ import app from '../app';
 // Importing winston logger
 import log from '../config/winston';
 
+// Importing configuration keys
+import configKeys from '../config/configKeys';
+
+// Importing db connection function
+import connectWithRetry from '../database/mongooseConnection';
+
 /**
  * Create HTTP server.
  */
@@ -41,7 +47,7 @@ function normalizePort(val) {
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || '4000');
+const port = normalizePort(process.env.PORT || configKeys.PORT);
 app.set('port', port);
 
 /**
@@ -80,6 +86,9 @@ function onListening() {
   const addr = server.address();
   log.info(`⭐⭐ Listening on ${process.env.APP_URL}:${addr.port} ⭐⭐`);
 }
+
+// Launching db connection
+connectWithRetry(configKeys.MONGO_URL);
 
 /**
  * Listen on provided port, on all network interfaces.
