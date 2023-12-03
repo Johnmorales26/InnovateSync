@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./server/bin/www",
-    "dev": "DEBUG=test-dwpcii:server && babel-watch ./server/bin/www",
+    "dev": "DEBUG=innovatesync:server && babel-watch ./server/bin/www",
     "devc": "NODE_ENV=development && webpack serve --config ./webpack.dev.config.js --mode development",
     "cleans": "rm -rf dist",
     "cleanc": "rm -f ./public/bundle.js ./public/styles/app.css",
