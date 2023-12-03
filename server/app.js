@@ -1,47 +1,53 @@
-// Setting Webpack Modules
-import webpack from 'webpack';
-import WebpackDevMiddleware from 'webpack-dev-middleware';
-import WebpackHotMiddleware from 'webpack-hot-middleware';
+// Helps to handle http errors
+import createError from 'http-errors';
+// Import the Express Library
+import express from 'express';
+// Is a Core-Node library to manage system paths
+import path from 'path';
 // Helps to parse client cookies
 import cookieParser from 'cookie-parser';
 // Library to log http communication
 import morgan from 'morgan';
+
+// Setting Webpack Modules
+import webpack from 'webpack';
+import WebpackDevMiddleware from 'webpack-dev-middleware';
+import WebpackHotMiddleware from 'webpack-hot-middleware';
+
+// Importing template-engine
+import configTemplateEngine from './config/templateEngine';
+// Importing subroutes
+import indexRouter from './routes/index';
+import usersRouter from './routes/users';
 // Importing webpack configuration
 import webpackConfig from '../webpack.dev.config';
+
 // Impornting winston logger
 import log from './config/winston';
 
-const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
-const logger = require('morgan');
-
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 // Creando variable del directorio raiz
 // eslint-disable-next-line
-global["__rootdir"] = path.resolve(process.cwd());
+global['__rootdir'] = path.resolve(process.cwd());
 
-//  Creando la instancia de express
+// We are creating the express instance
 const app = express();
+
 // Get the execution mode
 const nodeEnviroment = process.env.NODE_ENV || 'production';
+
 // Deciding if we add webpack middleware or not
 if (nodeEnviroment === 'development') {
   // Start Webpack dev server
   console.log('🛠️  Ejecutando en modo desarrollo');
   // Adding the key "mode" with its value "development"
   webpackConfig.mode = nodeEnviroment;
-  // Setting the dev server port to the same value as the express server
+  // Setting the port
   webpackConfig.devServer.port = process.env.PORT;
   // Setting up the HMR (Hot Module Replacement)
   webpackConfig.entry = [
     'webpack-hot-middleware/client?reload=true&timeout=1000',
     webpackConfig.entry,
   ];
-  // Agregar el plugin a la configuración de desarrollo
-  // de webpack
-  webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
   // Creating the bundler
   const bundle = webpack(webpackConfig);
   // Enabling the webpack middleware
@@ -56,22 +62,23 @@ if (nodeEnviroment === 'development') {
   console.log('🏭 Ejecutando en modo producción 🏭');
 }
 
-// Configurando el motor de plantillas
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+// Configuring the template engine
+configTemplateEngine(app);
 
-//  Se establecen los Middlewares
+// Registering middlewares
 // Log all received requests
 app.use(morgan('dev', { stream: log.stream }));
-app.use(logger('dev'));
+// Parse request data into json
 app.use(express.json());
+// Decode url info
 app.use(express.urlencoded({ extended: false }));
+// Parse client cookies into json
 app.use(cookieParser());
-//  Crea un server de archivos estaticos
-app.use(express.static(path.join(__dirname, '..', 'public')));
+// Set up the static file server
+app.use(express.static(path.join(__dirname, '../public')));
 
+// Registering routes
 app.use('/', indexRouter);
-//  Activa "usersRouter" cuando se solicita
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
