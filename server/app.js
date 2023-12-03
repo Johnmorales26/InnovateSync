@@ -81,8 +81,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
 
 // Registering routes
-// app.use('/', indexRouter);
-// app.use('/users', usersRouter);
 router.addRoutes(app);
 
 // catch 404 and forward to error handler
