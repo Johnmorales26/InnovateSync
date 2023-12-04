@@ -23,4 +23,11 @@ h1 {
   margin-right: 10px; /* Add some space between the image and text if desired */
 }
 
+#toast-container {
+  top: auto !important;
+  right: auto !important;
+  bottom: 70%;
+  left:40%;
+}
+
 /* #FF9F1C */

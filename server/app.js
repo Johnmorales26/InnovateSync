@@ -2,6 +2,8 @@
 import createError from 'http-errors';
 // Import the Express Library
 import express from 'express';
+// Enable post and delete verbs
+import methodOverride from 'method-override';
 // Is a Core-Node library to manage system paths
 import path from 'path';
 // Helps to parse client cookies
@@ -16,11 +18,11 @@ import WebpackHotMiddleware from 'webpack-hot-middleware';
 
 // Importing template-engine
 import configTemplateEngine from './config/templateEngine';
-// Importing subroutes
-import indexRouter from './routes/index';
-import usersRouter from './routes/users';
 // Importing webpack configuration
 import webpackConfig from '../webpack.dev.config';
+
+// Importando configurador de sesiones
+import configSession from './config/configSessions';
 
 // Impornting winston logger
 import log from './config/winston';
@@ -77,6 +79,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // Parse client cookies into json
 app.use(cookieParser());
+// Enable post and delete verbs
+app.use(methodOverride('_method'));
+// Habilitando manejo de sesiones y mensajes flash
+configSession(app);
 // Set up the static file server
 app.use(express.static(path.join(__dirname, '../public')));
 
