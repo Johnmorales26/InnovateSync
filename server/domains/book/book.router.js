@@ -8,6 +8,7 @@ const router = new Router();
 // Rutas
 router.get(['/', '/dashboard'], bookController.showDashboard);
 router.get(['/add-form', '/add'], bookController.addForm);
+router.get('/edit/:id', bookController.edit);
 router.post(
   '/add',
   ValidateFactory({
@@ -17,6 +18,14 @@ router.post(
   bookController.addBook,
 );
 router.post('/searchBooks', bookController.searchBooks);
+router.put(
+  '/edit/:id',
+  ValidateFactory({
+    schema: bookValidator.bookSchema,
+    getObject: bookValidator.getBook,
+  }),
+  bookController.editPut,
+);
 router.delete('/:id', bookController.deleteBook);
 
 export default router;
