@@ -8,6 +8,7 @@ import 'materialize-css/dist/css/materialize.css';
 import 'materialize-css/dist/js/materialize';
 // Script para borrar proyecto
 import deleteBook from './domains/book.dashboard';
+import deleteLoan from './domains/loans.dashboard';
 
 // Inicializando Scripts de Materialize para interactividad
 M.AutoInit();
@@ -16,6 +17,11 @@ M.AutoInit();
 if (window.location.pathname === '/book') {
   console.log('Script cargado correctamente');
   window.deleteBook = deleteBook;
+}
+// Cargando script en caso de que la URL sea '/loans/searchLoans'
+if (window.location.pathname === '/loans/searchLoans') {
+  console.log('Script cargado correctamente');
+  window.deleteLoan = deleteLoan;
 }
 
 console.log('Webpack Working Middleware!!! 📦');

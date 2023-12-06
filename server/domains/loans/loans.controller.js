@@ -3,6 +3,13 @@ import log from '../../config/winston';
 import BookModel from '../book/book.model';
 import LoansModel from './loans.model';
 
+const getLoans = async (req, res) => {
+  // Consultado todos los proyectos
+  const loans = await LoansModel.find({}).lean().exec();
+  // Enviando los proyectos al cliente en JSON
+  res.render('loans/dashboardView', { loans });
+};
+
 const loans = async (req, res) => {
   const { id } = req.params;
   try {
@@ -68,11 +75,32 @@ const loansAction = async (req, res) => {
   }
 };
 
+const deleteLoan = async (req, res) => {
+  // Extrayendo el id de los parametros
+  const { id } = req.params;
+  // Usando el modelo para borrar el proyecto
+  try {
+    const result = await LoansModel.findByIdAndRemove(id);
+    //  Buscando el libro reservado
+    const book = await BookModel.findOne({ isbn: result.isbn });
+    //  Incrementando su cantidad de disponibilidad en 1
+    book.copiesAvailable += 1;
+    await book.save();
+    // Agregando mensaje de flash
+    req.flash('successMessage', 'Reserva borrada con exito');
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
 const returns = (req, res) => {
   res.render('book/addView');
 };
 
 export default {
+  deleteLoan,
+  getLoans,
   loans,
   loansAction,
   returns,
